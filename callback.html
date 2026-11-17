@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TikTok connected — tavascript Publisher</title><link rel="stylesheet" href="style.css">
+<style>.card{background:#141824;border:1px solid #222836;border-radius:14px;padding:20px;margin-top:22px}.ok{color:#4ade80;font-weight:700}.err{color:#fe2c55;font-weight:700}textarea{width:100%;background:#0b0d12;color:#4dd0ff;border:1px solid #222836;border-radius:8px;padding:10px;font:14px ui-monospace,monospace}button{background:#f7c948;border:0;border-radius:8px;padding:10px 16px;font-weight:700;cursor:pointer}</style>
+</head><body><main>
+<a href="index.html">&larr; tavascript</a>
+<div class="logo" style="margin-top:20px">&lt; t /&gt;</div>
+<h1>tavascript Publisher</h1>
+<div class="card" id="box"></div>
+<footer><a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Service</a></footer>
+</main>
+<script>
+const q=new URLSearchParams(location.search), box=document.getElementById('box');
+let saved=null; try{saved=sessionStorage.getItem('tt_state')}catch(e){}
+if(q.get('error')){
+  box.innerHTML='<p class="err">Authorization was not completed.</p><p class="mut"></p>';
+  box.querySelector('.mut').textContent=(q.get('error_description')||q.get('error'));
+}else if(q.get('code')){
+  const stateOk=!saved||saved===q.get('state');
+  box.innerHTML='<p class="ok">✓ TikTok account connected</p>'+
+   '<p>Granted scopes: <code></code></p>'+
+   (stateOk?'':'<p class="err">State mismatch — please start again.</p>')+
+   '<p class="mut">Copy this one-time authorization code into tavascript Publisher to finish connecting:</p>'+
+   '<textarea rows="3" readonly></textarea><p><button id="c">Copy code</button></p>';
+  box.querySelector('code').textContent=q.get('scopes')||'';
+  const ta=box.querySelector('textarea'); ta.value=q.get('code');
+  document.getElementById('c').onclick=()=>{ta.select();navigator.clipboard?.writeText(ta.value);document.getElementById('c').textContent='Copied';};
+}else{
+  box.innerHTML='<p class="mut">Nothing to show. Start from the Connect page.</p>';
+}
+</script>
+</body></html>
