@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connect TikTok — tavascript Publisher</title><link rel="stylesheet" href="style.css">
+<style>.btn{display:inline-block;background:#fe2c55;color:#fff;font-weight:700;padding:14px 22px;border-radius:10px;text-decoration:none;border:0;font-size:16px;cursor:pointer}.card{background:#141824;border:1px solid #222836;border-radius:14px;padding:20px;margin-top:22px}code{color:#4dd0ff}</style>
+</head><body><main>
+<a href="index.html">&larr; tavascript</a>
+<div class="logo" style="margin-top:20px">&lt; t /&gt;</div>
+<h1>tavascript Publisher</h1>
+<p class="mut">Connect the tavascript TikTok account so the Publisher can upload tavascript's own videos.</p>
+<div class="card">
+<p><b>Permissions requested</b></p>
+<ul>
+<li><code>user.info.basic</code> — show which TikTok account is connected (name and avatar)</li>
+<li><code>video.upload</code> — send a finished video to TikTok drafts</li>
+<li><code>video.publish</code> — post a finished video directly to the connected profile</li>
+</ul>
+<button class="btn" id="go">Connect with TikTok</button>
+<p class="mut" id="msg" style="font-size:14px"></p>
+</div>
+<footer><a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Service</a></footer>
+</main>
+<script>
+const q=new URLSearchParams(location.search);
+const ck=q.get('client_key');
+const msg=document.getElementById('msg');
+if(!ck){msg.textContent='Open this page from tavascript Publisher (missing client key).';}
+document.getElementById('go').onclick=()=>{
+  if(!ck) return;
+  const state=Math.random().toString(36).slice(2);
+  try{sessionStorage.setItem('tt_state',state)}catch(e){}
+  const p=new URLSearchParams({client_key:ck,response_type:'code',scope:'user.info.basic,video.upload,video.publish',
+    redirect_uri:location.origin+location.pathname.replace(/connect\.html$/,'callback.html'),state});
+  location.href='https://www.tiktok.com/v2/auth/authorize/?'+p.toString();
+};
+</script>
+</body></html>
